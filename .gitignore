@@ -1,0 +1,29 @@
+# 🔹 Archivos de Python
+*.pyc
+*.pyo
+__pycache__/
+*.log
+
+# 🔹 Configuración de entornos virtuales
+venv/
+env/
+*.env
+*.venv
+
+# 🔹 Archivos de Django
+db.sqlite3
+media/
+staticfiles/
+
+# 🔹 Configuración de Docker (si usas Docker)
+*.dockerfile
+docker-compose.yml
+
+# 🔹 Configuración de Git
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# 🔹 Configuración de GitHub Actions
+.github/
