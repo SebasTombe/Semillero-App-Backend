@@ -54,5 +54,5 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest .\register\tests\
-        pytest .\authentication\tests\
+        pytest register/tests/
+        pytest athentication/tests/
