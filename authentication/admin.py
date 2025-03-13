@@ -4,4 +4,4 @@ from django.contrib.auth.admin import UserAdmin
 
 @admin.register(get_user_model())
 class CustomUserAdmin(UserAdmin):
-    pass
+    ordering = ('document_number',)
