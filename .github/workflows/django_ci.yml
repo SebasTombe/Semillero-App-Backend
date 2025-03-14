@@ -1,4 +1,4 @@
-name: Django CI
+name: Django CI/CD with CodeDeploy
 
 on:
   push:
@@ -36,10 +36,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: '3.9'
 
@@ -56,3 +56,38 @@ jobs:
       run: |
         pytest register/tests/
         pytest authentication/tests/
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials using OIDC
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::897722690560:role/IAMforGithubActions
+        aws-region: us-east-1
+
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.EC2_SSH_PRIVATE_KEY }} >> ~/.ssh/known_hosts
+
+    - name: Copy files to EC2
+      run: |
+        scp -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.EC2_SSH_PRIVATE_KEY }}:/home/ubuntu/backend
+
+    - name: Deploy with CodeDeploy
+      run: |
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_SSH_PRIVATE_KEY }} << 'EOF'
+        aws deploy create-deployment \
+          --application-name Semillero-backend \
+          --deployment-group-name Grupo-backend \
+          --revision revisionType=LocalFile,bundleType=zip,fileExistsBehavior=OVERWRITE \
+          --local-path /home/ubuntu/backend
+        EOF
