@@ -84,11 +84,11 @@ jobs:
 
     - name: Copy files to EC2
       run: |
-        scp -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.EC2_SSH_PRIVATE_KEY }}:/home/ubuntu/backend
+        scp -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/backend
 
     - name: Deploy with CodeDeploy
       run: |
-        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_SSH_PRIVATE_KEY }} << 'EOF'
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
         aws deploy create-deployment \
           --application-name Semillero-backend \
           --deployment-group-name Grupo-backend \
