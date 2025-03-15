@@ -84,15 +84,19 @@ jobs:
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+        echo "Contents of ~/.ssh:"
         ls -la ~/.ssh
+        echo "Contents of ~/.ssh/id_rsa:"
         cat ~/.ssh/id_rsa
 
     - name: Copy files to EC2
       run: |
+        echo "Copying files to EC2"
         scp -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/backend
 
     - name: Deploy with CodeDeploy
       run: |
+        echo "Deploying with CodeDeploy"
         ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
         aws deploy create-deployment \
           --application-name Semillero-backend \
