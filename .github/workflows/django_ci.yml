@@ -92,12 +92,12 @@ jobs:
     - name: Copy files to EC2
       run: |
         echo "Copying files to EC2"
-        scp -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/backend
+        scp -v -i ~/.ssh/id_rsa -r . ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/backend
 
     - name: Deploy with CodeDeploy
       run: |
         echo "Deploying with CodeDeploy"
-        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+        ssh -v -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
         aws deploy create-deployment \
           --application-name Semillero-backend \
           --deployment-group-name Grupo-backend \
