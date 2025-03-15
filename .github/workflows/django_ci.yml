@@ -81,7 +81,10 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-
+      
+      - name: Create static files directory
+        run: mkdir -p staticfiles
+        
       - name: Collect static files
         run: |
           source venv/bin/activate
