@@ -93,7 +93,7 @@ jobs:
       - name: Package application
         run: |
           mkdir deploy
-          cp -r * deploy/
+          cp -r $(ls -A | grep -v deploy) deploy/
           zip -r deploy.zip deploy
 
       - name: Set AWS credentials
