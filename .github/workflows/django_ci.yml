@@ -77,16 +77,12 @@ jobs:
 
     - name: Set up SSH key
       run: |
-        echo "Current directory: $(pwd)"
-        echo "Home directory contents before mkdir: $(ls -la ~)"
         mkdir -p ~/.ssh
-        echo "Home directory contents after mkdir: $(ls -la ~)"
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-        echo "Contents of ~/.ssh:"
+        # Debugging: List contents of ~/.ssh and check permissions
         ls -la ~/.ssh
-        echo "Contents of ~/.ssh/id_rsa:"
         cat ~/.ssh/id_rsa
 
     - name: Copy files to EC2
